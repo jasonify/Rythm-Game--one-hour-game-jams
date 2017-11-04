@@ -56,8 +56,8 @@ var canvas = document.getElementById('canvas'),
         elements.push({
           x: 0, 
           y: Math.random() * height * 0.8 + 50,
-          ySpeed: Math.random() * 3 + 1,
-          xSpeed: Math.random() * 3 + 1,
+          ySpeed: Math.random() * 10 + 4,
+          xSpeed: Math.random() * 10 + 4,
           width: 30,
           height: 30
         });
@@ -93,14 +93,23 @@ var canvas = document.getElementById('canvas'),
       }
     }
 
+    var justHit = false;
     function render(){
       updateEnemies();
-      context.clearRect(0,0, width, height);
+      if (justHit) {
+        justHit = false;
+        context.fillStyle="#FF0000";
+        context.fillRect(0, 0, width, height);
+        context.fillStyle="#000000";
+      } else {
+        context.clearRect(0,0, width, height);
+      }
       context.fillRect(x , y , heroDimensions, heroDimensions);
       renderEnemies();
       var didCollide  = checkEnemyCollisions(x,y,heroDimensions,heroDimensions);
       if (didCollide) {
         console.log('collided!');
+        justHit = true;
       }
       requestAnimationFrame(render);
     }
