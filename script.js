@@ -121,6 +121,11 @@ var canvas = document.getElementById('canvas'),
         autoFilter.start()
         }
         death++;
+        context.font = "30px Arial";
+        context.fillText("GAME OVER",10,50);
+
+        context.font = "15px Arial";
+        context.fillText(" Refresh the page :(",10,80);
 
         osc.volume
       osc.volume.value = 0;
