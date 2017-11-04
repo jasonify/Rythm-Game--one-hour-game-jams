@@ -20,6 +20,14 @@ var canvas = document.getElementById('canvas'),
                    r2.bottom < r1.top);
     }
 
+    function getRect(r1_x, r1_y, r1_width, r1_height){
+      return  {
+        left: r1_x,
+        top: r1_y,
+        right: r1_x + r1_width,
+        bottom: r1_y + r1_height,
+      };
+    }
     function collide(r1_x, r1_y, r1_width, r1_height,
                      r2_x, r2_y, r2_width, r2_height) {
       var r1 = {
@@ -38,10 +46,46 @@ var canvas = document.getElementById('canvas'),
       return intersectRect(r1, r2);
     }
 
-    function render(){
 
+    var score = 0;
+    var elements = [];
+    var elementsCount = 4;
+    function populateEnemies(){
+      for(var i = 0; i < elementsCount; i++) {
+        elements.push({
+          x: 0, 
+          y: Math.random() * height * 0.8 + 50,
+          ySpeed: Math.random() * 3 + 1,
+          xSpeed: Math.random() * 3 + 1,
+          width: 30,
+          height: 30
+        });
+      }
+    }
+
+
+    function updateEnemies(){
+      for(var i = 0; i < elementsCount; i++) {
+        var enemy = elements[i];
+        enemy.x += enemy.xSpeed;
+        if (enemy.x > width + enemy.width  || enemy.x < 0) {
+          enemy.xSpeed *= -1;
+          enemy.y = Math.random() * height * 0.8 + 50;
+        }
+      }
+    }
+    function renderEnemies(){
+      for(var i = 0; i < elementsCount; i++) {
+        var enemy = elements[i];
+        context.fillRect(enemy.x , enemy.y , enemy.width, enemy.height);
+      }
+    }
+
+    function render(){
+      updateEnemies();
       context.clearRect(0,0, width, height);
       context.fillRect(x , y , 50, 50);
+      renderEnemies();
       requestAnimationFrame(render);
     }
 
@@ -57,4 +101,12 @@ var canvas = document.getElementById('canvas'),
 
     });
 
-    render();
+   
+    function init(){
+      score = 0;
+      elements = [];
+      populateEnemies();
+      render();
+    }
+    init();
+
