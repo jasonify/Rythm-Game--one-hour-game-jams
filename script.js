@@ -50,6 +50,7 @@ var canvas = document.getElementById('canvas'),
     var score = 0;
     var elements = [];
     var elementsCount = 4;
+    var heroDimensions = 50;
     function populateEnemies(){
       for(var i = 0; i < elementsCount; i++) {
         elements.push({
@@ -64,6 +65,17 @@ var canvas = document.getElementById('canvas'),
     }
 
 
+    function checkEnemyCollisions(x, y, width, height){
+      for(var i = 0; i < elementsCount; i++) {
+        var enemy = elements[i];
+        var heroRect = getRect(x,y,width, height);
+        var enemyRect = getRect(enemy.x, enemy.y, enemy.width, enemy.height);
+        if ( intersectRect(heroRect, enemyRect)) {
+          return true;
+        }
+      }
+      return false;
+    }
     function updateEnemies(){
       for(var i = 0; i < elementsCount; i++) {
         var enemy = elements[i];
@@ -84,15 +96,18 @@ var canvas = document.getElementById('canvas'),
     function render(){
       updateEnemies();
       context.clearRect(0,0, width, height);
-      context.fillRect(x , y , 50, 50);
+      context.fillRect(x , y , heroDimensions, heroDimensions);
       renderEnemies();
+      var didCollide  = checkEnemyCollisions(x,y,heroDimensions,heroDimensions);
+      if (didCollide) {
+        console.log('collided!');
+      }
       requestAnimationFrame(render);
     }
 
     $(document).on('mousemove', function(event) {
       x = event.pageX;
       y = event.pageY;
-      console.log('event', x);
       osc.frequency.value = x;
       osc.volume.value = y;
       //the ration between the bpm and the frequency will be maintained
