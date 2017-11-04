@@ -94,13 +94,37 @@ var canvas = document.getElementById('canvas'),
     }
 
     var justHit = false;
+    var death = 0;
     function render(){
       updateEnemies();
       if (justHit) {
-        justHit = false;
+        // justHit = false;
         context.fillStyle="#FF0000";
         context.fillRect(0, 0, width, height);
         context.fillStyle="#000000";
+
+
+        if(death ==0){
+        //initialize the noise and start
+        var noise = new Tone.Noise("pink").start();
+
+        //make an autofilter to shape the noise
+        var autoFilter = new Tone.AutoFilter({
+          "frequency" : "8m", 
+          "min" : 800, 
+          "max" : 15000
+        }).connect(Tone.Master);
+
+        //connect the noise
+        noise.connect(autoFilter);
+        //start the autofilter LFO
+        autoFilter.start()
+        }
+        death++;
+
+        osc.volume
+      osc.volume.value = 0;
+
       } else {
         context.clearRect(0,0, width, height);
       }
@@ -118,7 +142,9 @@ var canvas = document.getElementById('canvas'),
       x = event.pageX;
       y = event.pageY;
       osc.frequency.value = x;
-      osc.volume.value = y;
+      if( justHit) {
+       osc.volume.value = y;
+      }
       //the ration between the bpm and the frequency will be maintained
 
       // Draw 
